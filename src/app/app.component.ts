@@ -10,7 +10,6 @@ import { RouterOutlet } from '@angular/router';
 
     <router-outlet />
   `,
-  styles: [],
 })
 export class AppComponent {
   title = 'angular-modal-as-route';

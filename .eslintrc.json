@@ -16,7 +16,6 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
             "style": "camelCase"
           }
         ],
@@ -24,10 +23,10 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
             "style": "kebab-case"
           }
         ],
+        "@angular-eslint/no-host-metadata-property": "off",
         "quotes": [
           "error",
           "single",

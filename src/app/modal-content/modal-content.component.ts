@@ -7,8 +7,8 @@ import { DataService } from '../service/data.service';
   selector: 'app-modal-content',
   standalone: true,
   template: `
-    <h1 class="${hlmH1}">{{ id }}</h1>
-    <p>{{ dataService.data() }}</p>
+    <h1 data-testingId="id" class="${hlmH1}">{{ id }}</h1>
+    <p data-testingId="data">{{ dataService.data() }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

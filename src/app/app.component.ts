@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
 import { DataService } from './service/data.service';
@@ -17,6 +17,7 @@ import { DataService } from './service/data.service';
 
     <router-outlet />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'angular-modal-as-route';

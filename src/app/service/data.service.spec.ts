@@ -17,7 +17,7 @@ describe('DataServiceService', () => {
   it('should set data', () => {
     service.data.set('test');
     expect(service.data()).toEqual('test');
-    
+
     service.data.set(null);
     expect(service.data()).toEqual(null);
   });

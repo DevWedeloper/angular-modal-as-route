@@ -6,17 +6,26 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+} from '@angular/router';
 import { HlmDialogService } from '@spartan-ng/ui-dialog-helm';
-import { delay, of, take } from 'rxjs';
+import { delay, filter, of, take } from 'rxjs';
 import { ModalContentComponent } from '../modal-content/modal-content.component';
 import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-modal-wrapper',
   standalone: true,
-  imports: [ModalContentComponent],
-  template: ``,
+  imports: [ModalContentComponent, RouterLink],
+  template: `
+    @if (onRefresh()) {
+      <a routerLink=".."> Back </a>
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalWrapperComponent {
@@ -24,19 +33,34 @@ export class ModalWrapperComponent {
   private router = inject(Router);
   private readonly _hlmDialogService = inject(HlmDialogService);
   private readonly dataService = inject(DataService);
+  protected onRefresh = signal(false);
 
   constructor() {
-    this.route()
-      .params.pipe(takeUntilDestroyed())
-      .subscribe((params) => {
-        const dialogRef = this._hlmDialogService.open(ModalContentComponent, {
-          context: { id: params['id'] },
-          contentClass: 'flex',
-        });
+    this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe((event) => {
+        if (event.id === 1) {
+          this.onRefresh.set(true);
+        } else {
+          this.route().params.subscribe((params) => {
+            const dialogRef = this._hlmDialogService.open(
+              ModalContentComponent,
+              {
+                context: { id: params['id'] },
+                contentClass: 'flex',
+              },
+            );
 
-        dialogRef.closed$.pipe(takeUntilDestroyed()).subscribe(() => {
-          this.router.navigate(['..'], { relativeTo: this.route() });
-        });
+            dialogRef.closed$.subscribe(() => {
+              this.router.navigate(['..'], { relativeTo: this.route() });
+            });
+          });
+        }
       });
 
     effect(() => {
